@@ -2,6 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: storage
+  namespace: openshift-gitops
   labels:
     gitops.tier.layer: infra
   annotations:
@@ -17,13 +18,12 @@ spec:
     path: storage
     helm:
       values: |
-        odf-operator:
-          channel: stable-4.8
-          sizeGiB: 512
-          storageClass: gp2
-          argo:
-            namespace: openshift-gitops
-            serviceAccount: openshift-gitops-cntk-argocd-application-controller
+        channel: ${CHANNEL}
+        sizeGiB: 512
+        storageClass: ${STORCLASS}
+        argo:
+          namespace: openshift-gitops
+          serviceAccount: openshift-gitops-cntk-argocd-application-controller
   syncPolicy:
     automated:
       prune: true
